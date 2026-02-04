@@ -1,7 +1,7 @@
 <br />
 <div align="center">
-  <a href="https://motd.gg">
-    <img src="img/logo.svg" alt="Logo" width="350" height="120">
+  <a href="https://motd.gg" target="_blank">
+    <img src="img/logo.svg" alt="Logo" width="260">
   </a>
 
   <h3 align="center">Server plugin</h3>
