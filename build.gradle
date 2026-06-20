@@ -1,23 +1,28 @@
 plugins {
     id 'java'
-    id 'com.github.johnrengelman.shadow' version '6.1.0'
+    id 'com.gradleup.shadow' version '8.3.5'
     id "com.modrinth.minotaur" version "2.+"
-    id "xyz.jpenilla.run-paper" version "2.0.1"
+    id "xyz.jpenilla.run-paper" version "2.3.1"
 }
 
 version = project.hasProperty('release') ? project.getProperty('release') : 'dev'
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+        vendor = JvmVendorSpec.ADOPTIUM
+    }
+}
+
 repositories {
     mavenCentral()
-    maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+    maven { url = 'https://repo.papermc.io/repository/maven-public/' }
     mavenLocal()
 }
 
 dependencies {
-    compileOnly 'org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT'
-    compileOnly 'org.jetbrains:annotations:23.0.0'
-    implementation "net.kyori:adventure-api:4.13.0"
-    implementation "net.kyori:adventure-platform-bukkit:4.2.0"
+    compileOnly 'io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT'
+    compileOnly 'org.jetbrains:annotations:24.1.0'
 }
 
 processResources {
@@ -30,14 +35,14 @@ processResources {
 
 tasks {
     runServer {
-        minecraftVersion("1.8.8")
+        minecraftVersion("1.21.8")
     }
 }
 
 shadowJar {
     from sourceSets.main.allSource
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    archiveFileName = "motdgg-bukkit-${project.version}.jar"
+    archiveFileName = "motdgg-paper-${project.version}.jar"
 }
 
 modrinth {
@@ -45,56 +50,16 @@ modrinth {
     projectId = "VPo0otUH"
     uploadFile = shadowJar
     gameVersions = [
-            "1.20",
-            "1.19.4",
-            "1.19.3",
-            "1.19.2",
-            "1.19.1",
-            "1.19",
-            "1.18.2",
-            "1.18.1",
-            "1.18",
-            "1.17.1",
-            "1.17",
-            "1.16.5",
-            "1.16.4",
-            "1.16.3",
-            "1.16.2",
-            "1.16.1",
-            "1.16",
-            "1.15.2",
-            "1.15.1",
-            "1.15",
-            "1.14.4",
-            "1.14.3",
-            "1.14.2",
-            "1.14.1",
-            "1.14",
-            "1.13.2",
-            "1.13.1",
-            "1.13",
-            "1.12.2",
-            "1.12.1",
-            "1.12",
-            "1.11.2",
-            "1.11.1",
-            "1.11",
-            "1.10.2",
-            "1.10.1",
-            "1.10",
-            "1.9.4",
-            "1.9.3",
-            "1.9.2",
-            "1.9.1",
-            "1.9",
-            "1.8.9",
-            "1.8.8",
-            "1.8.7",
-            "1.8.6",
-            "1.8.5",
-            "1.8.4",
-            "1.8.3",
+            "1.21.8",
+            "1.21.7",
+            "1.21.6",
+            "1.21.5",
+            "1.21.4",
+            "1.21.3",
+            "1.21.2",
+            "1.21.1",
+            "1.21",
     ]
-    loaders = ["spigot", "paper", "purpur"]
+    loaders = ["paper", "purpur", "folia"]
     changelog = rootProject.file("CHANGELOG.md").text
 }

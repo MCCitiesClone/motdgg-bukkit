@@ -1,4 +1,4 @@
-package gg.motd.bukkit;
+package gg.motd.paper;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -41,7 +41,7 @@ public class MOTDApplyCommand implements CommandExecutor {
             Matcher matcher = Pattern.compile("(?:https?://motd\\.gg/)?([a-zA-Z0-9]+)(?:\\..*)?")
                     .matcher(args[0]);
             if (!matcher.matches()) {
-                parent.plugin.adventure().sender(sender).sendMessage(Component
+                sender.sendMessage(Component
                         .text("No MOTD id specified. Use /motdgg apply <url|id>")
                         .color(NamedTextColor.RED)
                 );
@@ -51,7 +51,7 @@ public class MOTDApplyCommand implements CommandExecutor {
             id = matcher.group(1);
         }
 
-        parent.plugin.adventure().sender(sender).sendMessage(Component.empty()
+        sender.sendMessage(Component.empty()
                 .append(Component.text("Applying MOTD "))
                 .append(Component
                         .text("https://motd.gg/" + id)
@@ -65,7 +65,7 @@ public class MOTDApplyCommand implements CommandExecutor {
             parent.plugin.motd = parent.getPlugin().getClient().getMotd(id);
             parent.plugin.motd.setSession(session);
         } catch (IOException e) {
-            parent.plugin.adventure().sender(sender).sendMessage(Component
+            sender.sendMessage(Component
                     .text("Failed to fetch the MOTD from the motd.gg API. Check your log for details.")
                     .color(NamedTextColor.RED)
             );
@@ -83,7 +83,7 @@ public class MOTDApplyCommand implements CommandExecutor {
             properties.store(Files.newOutputStream(propertiesPath), null);
         }
         catch (IOException e) {
-            parent.plugin.adventure().sender(sender).sendMessage(Component
+            sender.sendMessage(Component
                     .text("Failed to write server.properties. Check your log for details.")
                     .color(NamedTextColor.RED)
             );
@@ -108,7 +108,7 @@ public class MOTDApplyCommand implements CommandExecutor {
                     parent.plugin.icon = sender.getServer().loadServerIcon(new File("server-icon.png"));
                 }
                 catch (Exception e) {
-                    parent.plugin.adventure().sender(sender).sendMessage(Component
+                    sender.sendMessage(Component
                             .text("Failed to load server icon. You will have to restart your server to apply the change. " +
                                     "Check your log for details.")
                             .color(NamedTextColor.RED)
@@ -117,7 +117,7 @@ public class MOTDApplyCommand implements CommandExecutor {
                     success = false;
                 }
             } catch (IOException e) {
-                parent.plugin.adventure().sender(sender).sendMessage(Component
+                sender.sendMessage(Component
                         .text("Failed to write server-icon.png. Check your log for details.")
                         .color(NamedTextColor.RED)
                 );
@@ -127,7 +127,7 @@ public class MOTDApplyCommand implements CommandExecutor {
         }
 
         if (success) {
-            parent.plugin.adventure().sender(sender).sendMessage(Component
+            sender.sendMessage(Component
                     .text("Applied new MOTD and server icon.")
                     .color(NamedTextColor.GREEN)
             );

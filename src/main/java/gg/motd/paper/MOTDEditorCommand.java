@@ -1,10 +1,11 @@
-package gg.motd.bukkit;
+package gg.motd.paper;
 
 import gg.motd.api.MOTD;
 import gg.motd.api.SaveResponse;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -38,7 +39,7 @@ public class MOTDEditorCommand implements CommandExecutor {
         Server server = sender.getServer();
         if (parent.plugin.motd == null) {
             parent.plugin.motd = new MOTD()
-                    .setText(server.getMotd())
+                    .setText(LegacyComponentSerializer.legacySection().serialize(server.motd()))
                     .setFavicon(serverIcon);
         }
 
@@ -48,7 +49,7 @@ public class MOTDEditorCommand implements CommandExecutor {
             parent.plugin.motd = response.getMotd();
             success = response.isSuccess();
         } catch (IOException e) {
-            parent.plugin.adventure().sender(sender).sendMessage(Component
+            sender.sendMessage(Component
                     .text("Failed to save the MOTD to the motd.gg API. Check your log for details.")
                     .color(NamedTextColor.RED)
             );
@@ -57,7 +58,7 @@ public class MOTDEditorCommand implements CommandExecutor {
         }
 
         if (!success || parent.plugin.motd == null) {
-            parent.plugin.adventure().sender(sender).sendMessage(Component
+            sender.sendMessage(Component
                     .text("Failed to save the MOTD to the motd.gg API.")
                     .color(NamedTextColor.RED)
             );
@@ -72,7 +73,7 @@ public class MOTDEditorCommand implements CommandExecutor {
                         .color(NamedTextColor.AQUA)
                         .clickEvent(ClickEvent.openUrl(parent.plugin.motd.getSessionUrL()))
         );
-        parent.plugin.adventure().sender(sender).sendMessage(message);
+        sender.sendMessage(message);
         return true;
     }
 }

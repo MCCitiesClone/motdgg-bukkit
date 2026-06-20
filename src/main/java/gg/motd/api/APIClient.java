@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
 public class APIClient {
-    protected String userAgent = "motdgg-bukkit/unknown/unknown";
+    protected String userAgent = "motdgg-paper/unknown/unknown";
 
     public APIClient() {
 

@@ -4,8 +4,8 @@ description: Easily edit your MOTD and apply changes without restarting your ser
 author: Aternos GmbH
 website: https://motd.gg
 
-main: gg.motd.bukkit.MOTDGGPlugin
-api-version: 1.13
+main: gg.motd.paper.MOTDGGPlugin
+api-version: 1.21
 folia-supported: true
 
 commands:

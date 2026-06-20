@@ -1,4 +1,4 @@
-package gg.motd.bukkit;
+package gg.motd.paper;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -33,7 +33,7 @@ public class MOTDCommand implements CommandExecutor, TabExecutor {
     @Override
     public boolean onCommand(CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
         if (!sender.hasPermission("motdgg")) {
-            plugin.adventure().sender(sender).sendMessage(Component
+            sender.sendMessage(Component
                     .text("You don't have the permissions required to execute this command.")
                     .color(NamedTextColor.RED)
             );

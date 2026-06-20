@@ -1,5 +1,6 @@
-package gg.motd.bukkit;
+package gg.motd.paper;
 
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.ServerListPingEvent;
@@ -15,7 +16,7 @@ public class ServerListPingEventHandler implements Listener {
     @EventHandler
     public void handleServerPing(ServerListPingEvent event) {
         if (this.plugin.motd != null && this.plugin.motd.getText() != null) {
-            event.setMotd(this.plugin.motd.getText());
+            event.motd(LegacyComponentSerializer.legacySection().deserialize(this.plugin.motd.getText()));
         }
         if (this.plugin.icon != null) {
             event.setServerIcon(plugin.icon);
