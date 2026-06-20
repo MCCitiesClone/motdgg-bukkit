@@ -31,8 +31,6 @@ jobs:
                   java-version: 21
             - name: Grant execute permission for gradlew
               run: chmod +x gradlew
-            - name: init submodule
-              run: git submodule init && git submodule update
             - name: Build with Gradle
               run: ./gradlew shadowJar -Prelease=${{ steps.version.outputs.version }}
             - name: Create Release
@@ -43,7 +41,3 @@ jobs:
                   body_path: ${{ github.workspace }}/CHANGELOG.md
                   files: |
                       ./build/libs/motdgg-paper-${{ steps.version.outputs.version }}.jar
-            - name: Publish to Modrinth
-              env:
-                  MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-              run: ./gradlew modrinth -Prelease=${{ steps.version.outputs.version }}
