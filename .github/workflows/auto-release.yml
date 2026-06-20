@@ -1,0 +1,49 @@
+name: Auto Release
+on:
+    push:
+        branches:
+            - master
+permissions:
+    contents: write
+jobs:
+    release:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+            - name: Determine next version
+              id: version
+              run: |
+                  latest=$(git tag -l '[0-9]*.[0-9]*.[0-9]*' | sort -V | tail -n1)
+                  if [ -z "$latest" ]; then
+                      next="1.0.0"
+                  else
+                      IFS='.' read -r major minor patch <<< "$latest"
+                      next="$major.$minor.$((patch + 1))"
+                  fi
+                  echo "version=$next" >> "$GITHUB_OUTPUT"
+                  echo "Next version: $next"
+            - name: Set up JDK 21
+              uses: actions/setup-java@v4
+              with:
+                  distribution: temurin
+                  java-version: 21
+            - name: Grant execute permission for gradlew
+              run: chmod +x gradlew
+            - name: init submodule
+              run: git submodule init && git submodule update
+            - name: Build with Gradle
+              run: ./gradlew shadowJar -Prelease=${{ steps.version.outputs.version }}
+            - name: Create Release
+              uses: softprops/action-gh-release@v2
+              with:
+                  tag_name: ${{ steps.version.outputs.version }}
+                  name: v${{ steps.version.outputs.version }}
+                  body_path: ${{ github.workspace }}/CHANGELOG.md
+                  files: |
+                      ./build/libs/motdgg-paper-${{ steps.version.outputs.version }}.jar
+            - name: Publish to Modrinth
+              env:
+                  MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+              run: ./gradlew modrinth -Prelease=${{ steps.version.outputs.version }}
